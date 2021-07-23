@@ -20,6 +20,9 @@ public class Reserva {
     @JoinColumn(name = "pasajero_id", referencedColumnName = "pasajero_id")
     private Pasajero pasajero;
 
+    @OneToOne(mappedBy = "reserva", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Pasaje pasaje; //mappedBy = nombre del atributo que referencia la tabla
+
     @Column(name = "estado_reserva_id")
     private Integer estadoReservaId;
 
@@ -77,6 +80,22 @@ public class Reserva {
     public void setVuelo(Vuelo vuelo) {
         this.vuelo = vuelo;
     }
+    
+
+    public Pasaje getPasaje() {
+        return pasaje;
+    }
+
+    public void setPasaje(Pasaje pasaje) { //relacion bidereccional hecha en el set
+        this.pasaje = pasaje;
+        pasaje.setReserva(this);
+    }
+
+    /*public void asociarPasaje(Pasaje pasaje){
+        this.setPasaje(pasaje);
+        this.pasaje.setReserva(this);
+
+    }*/
 
     public enum EstadoReservaEnum{
 
@@ -106,9 +125,6 @@ public class Reserva {
         }
     }
 
-    
-
-
-    
+        
 }
 
