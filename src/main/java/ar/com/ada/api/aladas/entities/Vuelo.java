@@ -51,12 +51,12 @@ public class Vuelo {
         this.fecha = fecha;
     }
 
-    public Integer getEstadoVueloId() {
-        return estadoVueloId;
+    public EstadoVueloEnum getEstadoVueloId() {
+        return EstadoVueloEnum.parse(estadoVueloId);
     }
 
-    public void setEstadoVueloId(Integer estadoVueloId) {
-        this.estadoVueloId = estadoVueloId;
+    public void setEstadoVueloId(EstadoVueloEnum estadoVueloId) {
+        this.estadoVueloId = estadoVueloId.getValue();
     }
 
     public Integer getCapacidad() {
@@ -113,6 +113,38 @@ public class Vuelo {
     public void agregarReserva(Reserva reserva) {
         this.reservas.add(reserva);
         reserva.setVuelo(this);
+    }
+
+    public enum EstadoVueloEnum{
+
+        GENERADO (1), ORIGEN_ASIGNADO(2), DESTINO_ASIGNADO(3),
+        TRIPULACION_PREASIGNADA(4), ABIERTO(5), CONFIERMADO(6),
+        REPROGAMADO(7), CANCELADO(8), CERRADO(9); 
+        //No agregamos mas estados porque este sistema esta apuntado al
+        //negocio de reserva y no al negocio de trafico de vuelo.
+        //no es necesario para la vision que estamos armando
+        
+
+        private final int value;
+
+        private EstadoVueloEnum(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static EstadoVueloEnum parse(int id) {
+            EstadoVueloEnum status = null; // Default
+            for (EstadoVueloEnum item : EstadoVueloEnum.values()) {
+                if (item.getValue() == id) {
+                    status = item;
+                    break;
+                }
+            }
+            return status;
+        }
     }
 
 }
