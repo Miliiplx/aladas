@@ -14,7 +14,7 @@ public class AeropuertoService {
     @Autowired
     AeropuertoRepository repo;
 
-    public void crear(Integer aeropuertoId, String nombre, String codigoIATA){
+    public void crear(Integer aeropuertoId, String nombre, String codigoIATA) {
 
         Aeropuerto aeropuerto = new Aeropuerto();
         aeropuerto.setAeropuertoId(aeropuertoId);
@@ -25,10 +25,14 @@ public class AeropuertoService {
 
     }
 
-    public List<Aeropuerto> obtenerTodos(){
+    public List<Aeropuerto> obtenerTodos() {
 
         return repo.findAll();
     }
 
-    
+    public Aeropuerto buscarPorCodigoIATA(String codigoIATA) {
+        return repo.findByCodigoIATA(codigoIATA);
+
+    }
+
 }
