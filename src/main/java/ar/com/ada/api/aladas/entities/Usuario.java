@@ -100,6 +100,11 @@ public class Usuario {
         this.pasajero = pasajero;
     }
 
+    public Integer obtenerEntityId() {
+        // TODO, segun el tipo de usuario, devolver el pasajeroId o staffId o nada!
+        return null;
+    }
+
     public enum TipoUsuarioEnum{
 
         PASAJERO (1), STAFF(2);
