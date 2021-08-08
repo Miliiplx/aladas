@@ -118,7 +118,7 @@ public class Vuelo {
     public enum EstadoVueloEnum{
 
         GENERADO (1), ORIGEN_ASIGNADO(2), DESTINO_ASIGNADO(3),
-        TRIPULACION_PREASIGNADA(4), ABIERTO(5), CONFIERMADO(6),
+        TRIPULACION_PREASIGNADA(4), ABIERTO(5), CONFIRMADO(6),
         REPROGAMADO(7), CANCELADO(8), CERRADO(9); 
         //No agregamos mas estados porque este sistema esta apuntado al
         //negocio de reserva y no al negocio de trafico de vuelo.

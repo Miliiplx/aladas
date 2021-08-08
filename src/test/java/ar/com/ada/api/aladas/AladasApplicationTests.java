@@ -10,8 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import ar.com.ada.api.aladas.entities.Aeropuerto;
 import ar.com.ada.api.aladas.entities.Vuelo;
+import ar.com.ada.api.aladas.entities.Vuelo.EstadoVueloEnum;
 import ar.com.ada.api.aladas.services.AeropuertoService;
 import ar.com.ada.api.aladas.services.VueloService;
+import ar.com.ada.api.aladas.services.VueloService.ValidacionVueloDataEnum;
 
 @SpringBootTest
 class AladasApplicationTests {
@@ -102,6 +104,17 @@ class AladasApplicationTests {
 	@Test
 	void aeropuertoTestBuscadorIATA(){
 
+	}
+
+	@Test
+	void vueloValidarVueloMismoDestino(){
+		Vuelo vuelo = new Vuelo();
+		vuelo.setPrecio(new BigDecimal(1000));
+		vuelo.setEstadoVueloId(EstadoVueloEnum.GENERADO);
+		vuelo.setAeropuertoOrigen(532);
+		vuelo.setAeropuertoDestino(532);
+
+		assertEquals(ValidacionVueloDataEnum.ERROR_AEROPUERTOS_IGUALES, vueloService.validar(vuelo));
 	}
 
 }
