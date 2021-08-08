@@ -1,10 +1,13 @@
 package ar.com.ada.api.aladas.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ar.com.ada.api.aladas.entities.Vuelo;
+import ar.com.ada.api.aladas.models.request.EstadoVueloRequest;
 import ar.com.ada.api.aladas.models.response.GenericResponse;
 import ar.com.ada.api.aladas.services.VueloService;
 import ar.com.ada.api.aladas.services.VueloService.ValidacionVueloDataEnum;
@@ -42,6 +45,30 @@ public class VueloController {
 
             return ResponseEntity.badRequest().body(respuesta);
         }
+    }
+
+    @PutMapping("/api/vuelos/{id}/estados")
+    public ResponseEntity<GenericResponse> actualizarEstadoVuelo(@PathVariable Integer id,
+            @RequestBody EstadoVueloRequest estadoVuelo) {
+
+        GenericResponse respuesta = new GenericResponse();
+        respuesta.isOk = true;
+
+        Vuelo vuelo = service.buscarPorId(id);
+
+        vuelo.setEstadoVueloId(estadoVuelo.estado);
+
+        service.guardar(vuelo);
+
+        respuesta.message = "Estado actualizado con éxito.";
+
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/api/vuelos/abiertos")
+    public ResponseEntity<List<Vuelo>> vuelosAbiertos(){
+        
+        return ResponseEntity.ok(service.traerVuelosAbiertos());
     }
 
 }
