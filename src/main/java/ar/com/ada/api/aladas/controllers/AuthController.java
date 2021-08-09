@@ -45,11 +45,11 @@ public class AuthController {
 
         // aca creamos la persona y el usuario a traves del service.
 
-        Usuario usuario = usuarioService.crearUsuario(req.userType, req.fullName, req.country, req.identificationType,
+        Usuario usuario = usuarioService.crearUsuario(req.userType, req.fullName, req.country,req.birthDate,req.identificationType,
                 req.identification, req.email, req.password);
 
         r.isOk = true;
-        r.message = "Te registraste con exitoooo!!!!!!!";
+        r.message = "Usuario generado con éxito.";
         r.userId = usuario.getUsuarioId(); // <-- AQUI ponemos el numerito de id para darle a front!
 
         return ResponseEntity.ok(r);

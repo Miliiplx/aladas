@@ -12,93 +12,132 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import ar.com.ada.api.aladas.entities.*;
+import ar.com.ada.api.aladas.entities.Pais.PaisEnum;
+import ar.com.ada.api.aladas.entities.Pais.TipoDocuEnum;
 import ar.com.ada.api.aladas.entities.Usuario.TipoUsuarioEnum;
+import ar.com.ada.api.aladas.repos.PasajeroRepository;
 import ar.com.ada.api.aladas.repos.UsuarioRepository;
 import ar.com.ada.api.aladas.security.Crypto;
 
 @Service
 public class UsuarioService {
 
-  // @Autowired
-  // PasajeroService pasajeroService;
-  // @Autowired
-  // StaffService staffService;
-  @Autowired
-  UsuarioRepository usuarioRepository;
+    @Autowired
+    PasajeroService pasajeroService;
+    @Autowired
+    StaffService staffService;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
-  public Usuario buscarPorUsername(String username) {
-    return usuarioRepository.findByUsername(username);
-  }
-
-  public Usuario login(String username, String password) {
-
-    /**
-     * Metodo IniciarSesion recibe usuario y contraseña validar usuario y contraseña
-     */
-
-    Usuario u = buscarPorUsername(username);
-
-    if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getUsername()))) {
-
-      throw new BadCredentialsException("Usuario o contraseña invalida");
+    public Usuario buscarPorUsername(String username) {
+        return usuarioRepository.findByUsername(username);
     }
 
-    return u;
-  }
+    public Usuario login(String username, String password) {
 
-  public Usuario crearUsuario(TipoUsuarioEnum tipoUsuario, String nombre, int pais, int tipoDocumento, String documento,
-       String email, String password) {
+        /**
+         * Metodo IniciarSesion recibe usuario y contraseña validar usuario y contraseña
+         */
 
-    // Todo!
-    return null;
-  }
+        Usuario u = buscarPorUsername(username);
 
-  public Usuario buscarPorEmail(String email) {
+        if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getUsername()))) {
 
-    return usuarioRepository.findByEmail(email);
-  }
+            throw new BadCredentialsException("Usuario o contraseña invalida");
+        }
 
-  public Usuario buscarPor(Integer id) {
-    Optional<Usuario> usuarioOp = usuarioRepository.findById(id);
-
-    if (usuarioOp.isPresent()) {
-      return usuarioOp.get();
+        return u;
     }
 
-    return null;
-  }
+    public Usuario crearUsuario(TipoUsuarioEnum tipoUsuarioId, String nombre, int pais, Date fechaNacimiento,
+            TipoDocuEnum tipoDocumento, String documento, String email, String password) {
 
-  public Map<String, Object> getUserClaims(Usuario usuario) {
-    Map<String, Object> claims = new HashMap<>();
+        Usuario usuario = new Usuario();
 
-    claims.put("userType", usuario.getTipoUsuarioId()); //agrego Id al get porque CREO que asi lo tengo en mi base de datos
+        usuario.setTipoUsuarioId(tipoUsuarioId);
+        usuario.setUsername(email);
+        usuario.setEmail(email);
+        usuario.setPassword(Crypto.encrypt(password, email.toLowerCase()));
 
-    if (usuario.obtenerEntityId() != null)
-      claims.put("entityId", usuario.obtenerEntityId());
+        if (tipoUsuarioId == TipoUsuarioEnum.PASAJERO) {
 
-    return claims;
-  }
+            Pasajero pasajero = new Pasajero();
 
-  public UserDetails getUserAsUserDetail(Usuario usuario) {
-    UserDetails uDetails;
+            pasajero.setDocumento(documento);
+            pasajero.setPaisId(PaisEnum.parse(pais)); // el parse transforma numeros a enumeroados
+            pasajero.setFechaNacimiento(fechaNacimiento);
+            pasajero.setNombre(nombre);
+            pasajero.setTipoDocumentoId(tipoDocumento);
 
-    uDetails = new User(usuario.getUsername(), usuario.getPassword(), getAuthorities(usuario));
+            pasajero.setUsuario(usuario); // esto hace la relacion bidireccional
 
-    return uDetails;
-  }
+            pasajeroService.crearPasajero(pasajero);
+        } else {
 
-  // Usamos el tipo de datos SET solo para usar otro diferente a List private
-  Set<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
+            Staff staff = new Staff();
 
-    Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+            staff.setDocumento(documento);
+            staff.setPaisId(PaisEnum.parse(pais)); // el parse transforma numeros a enumeroados
+            staff.setFechaNacimiento(fechaNacimiento);
+            staff.setNombre(nombre);
+            staff.setTipoDocumentoId(tipoDocumento);
 
-    TipoUsuarioEnum userType = usuario.getTipoUsuarioId(); //AGREGO ID PORQUE CREO QUE ASI ESTABA EN MI DB
+            staff.setUsuario(usuario); // esto hace la relacion bidireccional
 
-    authorities.add(new SimpleGrantedAuthority("CLAIM_userType_" + userType.toString()));
+            staffService.crearStaff(staff);
 
-    if (usuario.obtenerEntityId() != null)
-      authorities.add(new SimpleGrantedAuthority("CLAIM_entityId_" + usuario.obtenerEntityId()));
-    return authorities;
-  }
+        }
+
+        return usuario;
+    }
+
+    public Usuario buscarPorEmail(String email) {
+
+        return usuarioRepository.findByEmail(email);
+    }
+
+    public Usuario buscarPor(Integer id) {
+        Optional<Usuario> usuarioOp = usuarioRepository.findById(id);
+
+        if (usuarioOp.isPresent()) {
+            return usuarioOp.get();
+        }
+
+        return null;
+    }
+
+    public Map<String, Object> getUserClaims(Usuario usuario) {
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("userType", usuario.getTipoUsuarioId()); // agrego Id al get porque CREO que asi lo tengo en mi base
+                                                            // de datos
+
+        if (usuario.obtenerEntityId() != null)
+            claims.put("entityId", usuario.obtenerEntityId());
+
+        return claims;
+    }
+
+    public UserDetails getUserAsUserDetail(Usuario usuario) {
+        UserDetails uDetails;
+
+        uDetails = new User(usuario.getUsername(), usuario.getPassword(), getAuthorities(usuario));
+
+        return uDetails;
+    }
+
+    // Usamos el tipo de datos SET solo para usar otro diferente a List private
+    Set<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
+
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        TipoUsuarioEnum userType = usuario.getTipoUsuarioId(); // AGREGO ID PORQUE CREO QUE ASI ESTABA EN MI DB
+
+        authorities.add(new SimpleGrantedAuthority("CLAIM_userType_" + userType.toString()));
+
+        if (usuario.obtenerEntityId() != null)
+            authorities.add(new SimpleGrantedAuthority("CLAIM_entityId_" + usuario.obtenerEntityId()));
+        return authorities;
+    }
 
 }
