@@ -1,6 +1,5 @@
 package ar.com.ada.api.aladas.services;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import ar.com.ada.api.aladas.entities.*;
 import ar.com.ada.api.aladas.entities.Pais.PaisEnum;
 import ar.com.ada.api.aladas.entities.Pais.TipoDocuEnum;
 import ar.com.ada.api.aladas.entities.Usuario.TipoUsuarioEnum;
-import ar.com.ada.api.aladas.repos.PasajeroRepository;
 import ar.com.ada.api.aladas.repos.UsuarioRepository;
 import ar.com.ada.api.aladas.security.Crypto;
 
@@ -41,7 +39,8 @@ public class UsuarioService {
 
         Usuario u = buscarPorUsername(username);
 
-        if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getUsername()))) {
+        //se agrega el toLowerCase desp del getEmail para que sea igual a la encriptacion
+        if (u == null || !u.getPassword().equals(Crypto.encrypt(password, u.getEmail().toLowerCase()))) {
 
             throw new BadCredentialsException("Usuario o contraseña invalida");
         }

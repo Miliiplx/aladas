@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import net.bytebuddy.asm.Advice.Return;
 
 import org.hibernate.annotations.NaturalId;
 
