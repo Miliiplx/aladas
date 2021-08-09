@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import net.bytebuddy.asm.Advice.Return;
+
 import org.hibernate.annotations.NaturalId;
 
 @Entity
@@ -15,7 +17,7 @@ public class Usuario {
     @Column(name = "usuario_id")
     private Integer usuarioId;
 
-    @NaturalId //hace la validacion para que el nombre de usuario sea univoco
+    @NaturalId // hace la validacion para que el nombre de usuario sea univoco
     private String username;
 
     private String password;
@@ -101,14 +103,20 @@ public class Usuario {
     }
 
     public Integer obtenerEntityId() {
-        // TODO, segun el tipo de usuario, devolver el pasajeroId o staffId o nada!
+
+        switch (this.getTipoUsuarioId()) {
+            case PASAJERO:
+                return this.getPasajero().getPasajeroId();
+            case STAFF:
+                return this.getStaff().getStaffId();
+            default:
+                break;
+        }
         return null;
     }
 
-    public enum TipoUsuarioEnum{
-
-        PASAJERO (1), STAFF(2);
-        
+    public enum TipoUsuarioEnum {
+        PASAJERO(1), STAFF(2);
 
         private final int value;
 
@@ -132,8 +140,4 @@ public class Usuario {
         }
     }
 
-    
-
-
-    
 }
