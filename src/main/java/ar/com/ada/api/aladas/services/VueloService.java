@@ -80,7 +80,7 @@ public class VueloService {
          * if(vuelo.getAeropuertoDestino() != vuelo.getAeropuertoOrigen()) return true;
          * else return false;
          */
-        return vuelo.getAeropuertoDestino() != vuelo.getAeropuertoOrigen();
+        return vuelo.getAeropuertoDestino().intValue() != vuelo.getAeropuertoOrigen().intValue();
 
     }
 

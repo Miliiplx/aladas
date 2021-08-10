@@ -1,10 +1,6 @@
 package ar.com.ada.api.aladas.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.secure.spi.GrantedPermission;
 import org.springframework.beans.factory.annotation.Autowired;

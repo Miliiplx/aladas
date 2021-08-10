@@ -108,13 +108,13 @@ class AladasApplicationTests {
 
 	}
 
-	@Test //SIGUE DANDO OK, CUANDO DEBERIA DAR AEROPUERTOS IGUALES. SOLUCIONAR!!!!!
+	@Test
 	void vueloValidarVueloMismoDestino(){
 		Vuelo vuelo = new Vuelo();
 		vuelo.setPrecio(new BigDecimal(100));
 		vuelo.setEstadoVueloId(EstadoVueloEnum.GENERADO);
-		vuelo.setAeropuertoOrigen(532);
-		vuelo.setAeropuertoDestino(532);
+		vuelo.setAeropuertoOrigen(143);
+		vuelo.setAeropuertoDestino(143);
 
 		assertEquals(ValidacionVueloDataEnum.ERROR_AEROPUERTOS_IGUALES, vueloService.validar(vuelo));
 	}
