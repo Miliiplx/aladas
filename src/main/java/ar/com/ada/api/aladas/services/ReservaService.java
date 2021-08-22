@@ -41,11 +41,15 @@ public class ReservaService {
         Pasajero pasajero = pasajeroService.buscarPorId(pasajeroId);
         pasajero.agregarReserva(reserva); // relacion bidireccional
 
-        vuelo.agregarReserva(reserva);//Relacion bidireccional
+        vuelo.agregarReserva(reserva);// Relacion bidireccional
 
         repo.save(reserva);
-        
+
         return reserva.getReservaId();
+    }
+
+    public Reserva buscarPorId(Integer reservaId) {
+        return repo.findByReservaId(reservaId);
     }
 
 }

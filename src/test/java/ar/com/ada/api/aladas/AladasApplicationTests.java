@@ -50,15 +50,17 @@ class AladasApplicationTests {
 	}
 
 	@Test
-	void aeropuertoValidarCodigoIATAOk(){
+	void aeropuertoValidarCodigoIATAOk() {
 
 		String codigoIATA1 = "EZE";
 		String codigoIATA2 = "A  ";
 		String codigoIATA3 = "N6N";
 
-		/*assertEquals(3, codigoIATA1.length());
-
-		assertTrue(codigoIATA2.length() == 3);*/
+		/*
+		 * assertEquals(3, codigoIATA1.length());
+		 * 
+		 * assertTrue(codigoIATA2.length() == 3);
+		 */
 
 		Aeropuerto aeropuerto1 = new Aeropuerto();
 		aeropuerto1.setCodigoIATA(codigoIATA1);
@@ -73,43 +75,41 @@ class AladasApplicationTests {
 		assertFalse(aeropuertoService.validarCodigoIATA(aeropuerto2));
 		assertFalse(aeropuertoService.validarCodigoIATA(aeropuerto3));
 
+	}
 
+	@Test
+	void aeropuertoValidarCodigoIATANoOk() {
 
 	}
 
 	@Test
-	void aeropuertoValidarCodigoIATANoOk(){
+	void vueloVerificarValidacionAeropuertoOrigenDestino() {
+		// validar todas las posibilidades de si el aeropuerto
+		// origen es igual al de destino, etc
+	}
+
+	@Test
+	void vueloChequearQueLosPendientesNoTenganVuelosViejos() {
 
 	}
 
 	@Test
-	void vueloVerificarValidacionAeropuertoOrigenDestino(){
-		//validar todas las posibilidades de si el aeropuerto
-		//origen es igual al de destino, etc
-	}
-
-	@Test
-	void vueloChequearQueLosPendientesNoTenganVuelosViejos(){
+	void vueloVerificarCapacidadMaxima() {
 
 	}
 
 	@Test
-	void vueloVerificarCapacidadMaxima(){
+	void vueloVerificarCapacidadMinima() {
 
 	}
 
 	@Test
-	void vueloVerificarCapacidadMinima(){
+	void aeropuertoTestBuscadorIATA() {
 
 	}
 
 	@Test
-	void aeropuertoTestBuscadorIATA(){
-
-	}
-
-	@Test
-	void vueloValidarVueloMismoDestino(){
+	void vueloValidarVueloMismoDestino() {
 		Vuelo vuelo = new Vuelo();
 		vuelo.setPrecio(new BigDecimal(100));
 		vuelo.setEstadoVueloId(EstadoVueloEnum.GENERADO);
@@ -120,19 +120,19 @@ class AladasApplicationTests {
 	}
 
 	@Test
-	void testearEncriptacion(){
+	void testearEncriptacion() {
 
 		String contraseñaImaginaria = "pitufosasesinos";
 		String contraseñaImaginariaEncriptada = Crypto.encrypt(contraseñaImaginaria, "palabra");
 
 		String contraseñaImaginariaEncriptadaDesencriptada = Crypto.decrypt(contraseñaImaginariaEncriptada, "palabra");
 
-		//assertTrue(contraseñaImaginariaEncriptadaDesencriptada.equals(contraseñaImaginaria));
+		// assertTrue(contraseñaImaginariaEncriptadaDesencriptada.equals(contraseñaImaginaria));
 		assertEquals(contraseñaImaginariaEncriptadaDesencriptada, contraseñaImaginaria);
 	}
 
 	@Test
-	void testearContraseña(){
+	void testearContraseña() {
 		Usuario usuario = new Usuario();
 
 		usuario.setUsername("Diana@gmail.com");
@@ -142,5 +142,21 @@ class AladasApplicationTests {
 		assertFalse(!usuario.getPassword().equals(Crypto.encrypt("AbcdE23", usuario.getUsername().toLowerCase())));
 
 	}
+
+	/*
+	 * @Test void testearAeropuertoId(){ Aeropuerto aeropuerto = new Aeropuerto();
+	 * aeropuerto.setAeropuertoId(17); aeropuerto.setCodigoIATA("MDZ");
+	 * aeropuerto.setNombre("Aeropuerto Internacional El Plumerillo");
+	 * 
+	 * assertEquals(ValidacidacionAeropuertoEnum.ERROR_AEROPUERTOS_IGUALES,
+	 * aeropuertoService.validar(aeropuerto)); }
+	 * 
+	 * @Test void testearAeropuertoCodigoIATA(){ Aeropuerto aeropuerto = new
+	 * Aeropuerto(); aeropuerto.setAeropuertoId(5539);
+	 * aeropuerto.setCodigoIATA("  M");
+	 * aeropuerto.setNombre("Aeropuerto Internacional El Plumerillo");
+	 * 
+	 * assertEquals(Valida, actual); }
+	 */
 
 }
