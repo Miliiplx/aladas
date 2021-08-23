@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import ar.com.ada.api.aladas.entities.Vuelo;
@@ -17,7 +18,6 @@ public class VueloController {
 
     @Autowired
     VueloService service;
-
     /*
      * ////OTRA FORMA DE HACERLO.//// private VueloService service;
      * 
@@ -47,6 +47,12 @@ public class VueloController {
         }
     }
 
+    @GetMapping("/api/vuelos/{id}")
+    public ResponseEntity<Vuelo> vueloPorId(@PathVariable Integer id) {
+        Vuelo vuelo = service.buscarPorId(id);
+        return ResponseEntity.ok(vuelo);
+    }
+
     @PutMapping("/api/vuelos/{id}/estados")
     public ResponseEntity<GenericResponse> actualizarEstadoVuelo(@PathVariable Integer id,
             @RequestBody EstadoVueloRequest estadoVuelo) {
@@ -66,9 +72,18 @@ public class VueloController {
     }
 
     @GetMapping("/api/vuelos/abiertos")
-    public ResponseEntity<List<Vuelo>> vuelosAbiertos(){
-        
+    public ResponseEntity<List<Vuelo>> vuelosAbiertos() {
+
         return ResponseEntity.ok(service.traerVuelosAbiertos());
+    }
+
+
+    @GetMapping("/api/vuelos/{id}/estadosV2")
+    @PreAuthorize("hasAuthority('CLAIM_userType_STAFF')")//string expression langueage
+    public ResponseEntity<?> getEstadoVuelo2(@PathVariable Integer id){
+
+        Vuelo vuelo = service.buscarPorId(id);
+        return ResponseEntity.ok(vuelo.getEstadoVueloId());
     }
 
 }
